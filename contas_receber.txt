@@ -1,0 +1,1 @@
+a:2:{i:0;a:3:{s:7:"cliente";s:16:"evento_casamento";s:5:"valor";s:5:"10.00";s:10:"vencimento";s:10:"2023-07-02";}i:1;a:3:{s:7:"cliente";s:8:"usuario1";s:5:"valor";s:2:"20";s:10:"vencimento";s:10:"2023-07-18";}}

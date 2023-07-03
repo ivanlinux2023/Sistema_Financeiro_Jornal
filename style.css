@@ -1,0 +1,241 @@
+Peço desculpas pela omissão anterior. A seguir está o código corrigido com a inclusão do estilo CSS:
+
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Financeiro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .form-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f1f1f1;
+        }
+
+        h2 {
+            margin-top: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .relatorio-container {
+            margin-top: 40px;
+        }
+
+        .relatorio-container h3 {
+            margin-bottom: 10px;
+        }
+
+        .relatorio-container h4 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .relatorio-container p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="logo_empresa.png" alt="Logo da Empresa" class="logo">
+        <h1>Sistema Financeiro</h1>
+    </div>
+
+    <div class="form-container">
+        <h3>Adicionar Conta a Receber</h3>
+        <form method="POST" action="">
+            <label for="cliente">Cliente:</label>
+            <input type="text" name="cliente" id="cliente" required>
+
+            <label for="valor">Valor:</label>
+            <input type="number" name="valor" id="valor" required step="0.01">
+
+            <label for="vencimento">Vencimento:</label>
+            <input type="date" name="vencimento" id="vencimento" required>
+
+            <input type="submit" value="Adicionar">
+        </form>
+    </div>
+
+    <h2>Contas a Receber</h2>
+    <table>
+        <tr>
+            <th>Cliente</th>
+            <th>Valor</th>
+            <th>Vencimento</th>
+        </tr>
+        <?php
+        // Exibe as contas a receber
+        foreach ($contasReceber as $conta) {
+            echo '<tr>';
+            echo '<td>' . $conta['cliente'] . '</td>';
+            echo '<td>' . $conta['valor'] . '</td>';
+            echo '<td>' . $conta['vencimento'] . '</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
+
+    <div class="form-container">
+        <h3>Adicionar Conta a Pagar</h3>
+        <form method="POST" action="">
+            <label for="fornecedor">Fornecedor:</label>
+            <input type="text" name="fornecedor" id="fornecedor" required>
+
+            <label for="valor">
+
+Valor:</label>
+            <input type="number" name="valor" id="valor" required step="0.01">
+
+            <label for="vencimento">Vencimento:</label>
+            <input type="date" name="vencimento" id="vencimento" required>
+
+            <input type="submit" value="Adicionar">
+        </form>
+    </div>
+
+    <h2>Contas a Pagar</h2>
+    <table>
+        <tr>
+            <th>Fornecedor</th>
+            <th>Valor</th>
+            <th>Vencimento</th>
+        </tr>
+        <?php
+        // Exibe as contas a pagar
+        foreach ($contasPagar as $conta) {
+            echo '<tr>';
+            echo '<td>' . $conta['fornecedor'] . '</td>';
+            echo '<td>' . $conta['valor'] . '</td>';
+            echo '<td>' . $conta['vencimento'] . '</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
+
+    <div class="relatorio-container">
+        <h2>Relatório</h2>
+        <?php
+        // Exibe o relatório
+        foreach ($relatorio as $vencimento => $dados) {
+            echo '<h3>Vencimento: ' . $vencimento . '</h3>';
+            echo '<h4>Contas a Receber:</h4>';
+            if (empty($dados['Receber'])) {
+                echo '<p>Nenhuma conta a receber encontrada.</p>';
+            } else {
+                echo '<table>';
+                echo '<tr><th>Cliente</th><th>Valor</th></tr>';
+                foreach ($dados['Receber'] as $contaReceber) {
+                    echo '<tr>';
+                    echo '<td>' . $contaReceber['cliente'] . '</td>';
+                    echo '<td>' . $contaReceber['valor'] . '</td>';
+                    echo '</tr>';
+                }
+                echo '</table>';
+            }
+
+            echo '<h4>Contas a Pagar:</h4>';
+            if (empty($dados['Pagar'])) {
+                echo '<p>Nenhuma conta a pagar encontrada.</p>';
+            } else {
+                echo '<table>';
+                echo '<tr><th>Fornecedor</th><th>Valor</th></tr>';
+                foreach ($dados['Pagar'] as $contaPagar) {
+                    echo '<tr>';
+                    echo '<td>' . $contaPagar['fornecedor'] . '</td>';
+                    echo '<td>' . $contaPagar['valor'] . '</td>';
+                    echo '</tr>';
+                }
+                echo '</table>';
+            }
+        }
+        ?>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Função para gerar gráfico
+        function gerarGrafico() {
+            var ctx = document.getElementById('grafico').getContext('2d');
+            var contasReceber = <?php echo json_encode($contasReceber); ?>;
+            var contasPagar = <?php echo json_encode($contasPagar); ?>;
+            var dados = {
+                labels: ['Contas a Receber', 'Contas a Pagar'],
+                datasets: [{
+                    data: [contasReceber.length, contasPagar.length],
+                    backgroundColor: ['#36A2EB', '#FF6384']
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: dados
+            });
+        }
+
+        //
+
+ Função para verificar contas vencidas e exibir alertas
+        function verificarContasVencidas() {
+            var contasReceber = <?php echo json_encode($contasReceber); ?>;
+            var contasPagar = <?php echo json_encode($contasPagar); ?>;
+            var hoje = new Date();
+
+            for (var i = 0; i < contasReceber.length; i++) {
+                var vencimento = new Date(contasReceber[i]['vencimento']);
+                if (vencimento < hoje) {
+                    alert('A conta a receber de ' + contasReceber[i]['cliente'] + ' está vencida!');
+                }
+            }
+
+            for (var i = 0; i < contasPagar.length; i++) {
+                var vencimento = new Date(contasPagar[i]['vencimento']);
+                if (vencimento < hoje) {
+                    alert('A conta a pagar para ' + contasPagar[i]['fornecedor'] + ' está vencida!');
+                }
+            }
+        }
+
+        // Chama as funções ao carregar a página
+        gerarGrafico();
+        verificarContasVencidas();
+    </script>
+</body>
+
+</html>
+```
+
+Certifique-se de ter um arquivo de estilo CSS chamado `style.css` no mesmo diretório que o arquivo `index.php`.
